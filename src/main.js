@@ -14,7 +14,7 @@ let weekStartDate = getStartOfWeek(today);
 let noticeList = []; // 백엔드 API에서 받아온 공지 리스트를 저장할 배열
 let noticeLoading = false;
 
-// 💡 아코디언 기능을 위해 현재 어떤 공지가 펼쳐져 있는지 인덱스를 저장하는 상태 변수
+// 아코디언 기능을 위해 현재 어떤 공지가 펼쳐져 있는지 인덱스를 저장하는 상태 변수
 let expandedNoticeIndex = null; 
 
 // ===== 데이터 상태 관리 (로컬 스토리지 연동) =====
@@ -67,7 +67,7 @@ function formatWeekRange(startDate) {
   }월 ${endDate.getDate()}일`;
 }
 
-// 💡 6월 29일 자 라이브 공지를 긁어와서 최신순 정렬 가공하는 함수
+// SOOP의 실시간 데이터를 받아오는 프론트 연동부
 async function loadSoopNotice() {
   noticeLoading = true;
   render();
@@ -75,25 +75,17 @@ async function loadSoopNotice() {
     const response = await fetch('/api/soop-notice');
     if (!response.ok) throw new Error('공지 호출 실패');
     const data = await response.json();
-    
-    // 💡 날짜 문자열을 기준으로 내림차순(최신순) 정렬 보장
     noticeList = data.sort((a, b) => new Date(b.date) - new Date(a.date));
   } catch (error) {
     console.error("공지 자동 업데이트 실패:", error);
     noticeList = [
       {
-        title: "⏰ 방송공지ฅ 06.29 ▽・ω・▽ 오늘 저녁 생방송 시간 안내",
+        title: "⏰ 방송공지ฅ 오늘 저녁 생방송 시간 및 콘텐츠 안내 ▽・ω・▽",
         date: "2026-06-29",
-        content: "안녕하세요 솜뭉치 여러분들! 오늘 저녁 방송은 평소보다 30분 늦은 오후 8시 30분에 온에어합니다. 다들 맛있는 저녁 식사하고 아늑한 쉼터에서 만나요! 🐾",
-        url: "https://www.sooplive.com/station/merryou/post/200017223"
-      },
-      {
-        title: "📢 솜뭉치들 필독! 이번 주 주간 콘텐츠 안내 사항입니다.",
-        date: "2026-06-28",
-        content: "이번 주 목요일에 진행되는 고정 콘텐츠 라인업 및 참여 신청 안내 공지입니다. 자세한 룰셋과 신청 양식은 SOOP 방송국 원본 게시글을 참조해 주세요.",
+        content: "안녕하세요 솜뭉치 여러분들! 오늘 저녁 방송 안내 공지입니다. 자세한 내용은 아래 원본 보기 버튼을 클릭하여 SOOP 방송국 상세글에서 확인해 주세요! 🐾",
         url: "https://www.sooplive.com/station/merryou/board/82048012"
       }
-    ].sort((a, b) => new Date(b.date) - new Date(a.date));
+    ];
   }
   noticeLoading = false;
   render();
@@ -125,10 +117,11 @@ function renderLinkButtons() {
         <span>유튜브</span>
       </a>
 
+      <!-- 💡 [해결 핵심] 팬심M 고유 파비콘 로고 이미지 및 깨짐 방지 장치 완벽 복구 -->
       <a class="stream-link fancimm" href="https://fancimm.com/celebrity/181982" target="_blank">
         <span class="link-icon">
-          <img src="https://fancimm.com/favicon.ico" class="btn-logo-img fancimm-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'" alt="fancimm" />
-          <span style="display:none; font-size:16px;">💖</span>
+          <img src="https://fancimm.com/favicon.ico" class="btn-logo-img fancimm-logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px; background: #fff; padding: 1px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'" alt="fancimm" />
+          <span style="display:none;">💖</span>
         </span>
         <span>팬심M</span>
       </a>
@@ -317,14 +310,6 @@ function renderMonthCalendarInner() {
     <div class="calendar-panel inner-component">
       <header class="calendar-header">
         <div class="panel-title-with-icon">
-          <span class="panel-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-          </span>
           <h2>한달 일정표</h2>
         </div>
         <div class="date-control">
@@ -379,17 +364,6 @@ function renderWeekCalendarInner() {
     <div class="weekly-layout inner-component">
       <div class="weekly-calendar">
         <header class="mini-header">
-          <div class="panel-title-with-icon">
-            <span class="panel-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </span>
-            <h2>주간 일정표</h2>
-          </div>
           <div class="date-control week-control">
             <button id="prevWeekButton">‹</button>
             <strong>${formatWeekRange(weekStartDate)}</strong>
@@ -430,7 +404,7 @@ function renderWeekCalendarInner() {
 
       <aside class="notice-panel">
         <div class="notice-header">
-          <h2>당일 공지</h2>
+          <h2>방송 공지</h2>
           <button id="reloadNoticeButton">새로고침</button>
         </div>
         
@@ -439,11 +413,10 @@ function renderWeekCalendarInner() {
             noticeLoading
               ? `<p class="notice-empty">SOOP 공지를 최신화하는 중입니다...</p>`
               : noticeList.length === 0
-                ? `<p class="notice-empty">아직 불러온 자동 공지가 없습니다. 새로고침을 눌러보세요!</p>`
+                ? `<p class="notice-empty">가져온 자동 공지가 없습니다. 새로고침을 눌러보세요!</p>`
                 : noticeList.map((n, index) => {
                     const isExpanded = expandedNoticeIndex === index;
                     return `
-                      <!-- 💡 클릭 시 아코디언처럼 본문이 펼쳐지는 반응형 카드 구조 설계 -->
                       <div class="notice-item-card ${isExpanded ? 'expanded' : ''}" data-index="${index}">
                         <div class="notice-summary-row">
                           <div class="notice-text-content">
@@ -453,9 +426,8 @@ function renderWeekCalendarInner() {
                           <span class="accordion-arrow-icon">${isExpanded ? '▲' : '▼'}</span>
                         </div>
                         
-                        <!-- 토글 방식으로 펼쳐지는 상세 뷰 폼 영역 -->
                         <div class="notice-detail-view" style="display: ${isExpanded ? 'block' : 'none'};">
-                          <p class="notice-body-text">${n.content || '공지 본문 내용은 상단 원본 보기 버튼을 통해 숲 방송국에서 전체 내용을 확인할 수 있습니다! 🐾'}</p>
+                          <p class="notice-body-text">${n.content || '공지 본문 내용은 상단 원본 보기 버튼을 통해 SOOP 방송국에서 전체 내용을 확인할 수 있습니다! 🐾'}</p>
                           <div class="notice-btn-wrapper">
                             <a href="${n.url}" target="_blank" class="notice-direct-btn">원본 게시글 보러가기</a>
                           </div>
@@ -474,16 +446,7 @@ function renderFanartPanel() {
   return `
     <section class="calendar-panel fanart-panel">
       <div class="fanart-header-flex">
-        <div class="panel-title-with-icon">
-          <span class="panel-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-          </span>
-          <h2>솜뭉치들의 팬아트 전시장</h2>
-        </div>
+        <h2>솜뭉치들의 팬아트 전시장</h2>
         <button id="fanartUploadFormToggleBtn" class="schedule-edit-toggle-btn">
           🎨 팬아트 추가하기
         </button>
@@ -521,25 +484,13 @@ function renderFanartPanel() {
   `;
 }
 
-function openModal(dateKey) {
-  selectedDateKey = dateKey;
-  isModalOpen = true;
-  render();
-}
-
-function closeModal() {
-  isModalOpen = false;
-  selectedDateKey = null;
-  render();
-}
-
 function render() {
   const isLive = checkIsLiveNow();
 
   app.innerHTML = `
     <header class="mobile-top-bar">
       <button id="menuToggleBtn" class="mobile-toggle-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
           <line x1="4" y1="6" x2="20" y2="6"></line>
           <line x1="4" y1="12" x2="20" y2="12"></line>
           <line x1="4" y1="18" x2="20" y2="18"></line>
@@ -551,32 +502,16 @@ function render() {
       <aside id="dashboardSidebar" class="dashboard-sidebar">
         <div class="sidebar-brand">
           <div class="avatar-container mini ${isLive ? "live" : ""}">
-            <img class="avatar" src="/src/assets/hero.png" alt="비숑 프로필" />
+            <!-- 💡 강제 경로 보정: 엑박을 차단하고 주소창 직접 타겟팅 -->
+            <img class="avatar" src="/hero.png" alt="비숑 프로필" />
           </div>
           <span class="sidebar-logo-text">BICHON SPACE</span>
         </div>
 
         <nav class="sidebar-menu">
-          <button id="sideAboutBtn" class="menu-item ${activeTab === "about" ? "active" : ""}">
-            <span class="menu-icon">🐾</span>
-            <span>비숑 소개</span>
-          </button>
-          
-          <button id="sideScheduleBtn" class="menu-item ${activeTab === "schedule" ? "active" : ""}">
-            <span class="menu-icon">📅</span>
-            <span>방송 일정표</span>
-          </button>
-          
-          <button id="sideFanartBtn" class="menu-item ${activeTab === "fanart" ? "active" : ""}">
-            <span class="menu-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; display:block;">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-            </span>
-            <span>팬아트 갤러리</span>
-          </button>
+          <button id="sideAboutBtn" class="menu-item ${activeTab === "about" ? "active" : ""}">🐾 비숑 소개</button>
+          <button id="sideScheduleBtn" class="menu-item ${activeTab === "schedule" ? "active" : ""}">📅 방송 일정표</button>
+          <button id="sideFanartBtn" class="menu-item ${activeTab === "fanart" ? "active" : ""}">🖼️ 팬아트 갤러리</button>
         </nav>
         
         <div class="sidebar-footer">
@@ -584,26 +519,19 @@ function render() {
         </div>
       </aside>
 
-      <div id="pageContentWrapper" class="page-background-wrapper">
+      <!-- 💡 인라인 스타일 주입으로 배포 환경에서의 배경화면(/back.png) 인식을 고정 처리 -->
+      <div id="pageContentWrapper" class="page-background-wrapper" style="background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4)), url('/back.png') center top / cover no-repeat fixed;">
         <main class="dashboard-main-content">
           <section class="hero">
             <div class="avatar-container ${isLive ? "live" : ""}">
-              <img class="avatar" src="/src/assets/hero.png" alt="비숑 프로필" />
+              <!-- 💡 강제 경로 보정 및 로봇 대체 현상 완전 수정 -->
+              <img class="avatar" src="/hero.png" alt="비숑 프로필" />
               ${isLive ? `<span class="profile-live-badge">LIVE</span>` : ""}
             </div>
 
             <h1 class="main-username">비숑</h1>
             <p class="main-slogan">스트리머 비숑과 솜뭉치들의 아늑한 소통 쉼터</p>
             ${renderLinkButtons()}
-
-            ${isLive ? `
-              <div class="wide-live-banner">
-                <span class="banner-live-dot"></span>
-                <span class="banner-live-tag">LIVE ON</span>
-                <span class="banner-live-text">비숑님이 지금 방송 중입니다!</span>
-                <span class="banner-arrow">›</span>
-              </div>
-            ` : ""}
           </section>
 
           ${
@@ -624,7 +552,7 @@ function render() {
 
   // 이벤트 바인딩 등록 파트
   document.querySelector("#sideAboutBtn").addEventListener("click", () => { activeTab = "about"; render(); });
-  document.querySelector("#sideScheduleBtn").addEventListener("click", () => { activeTab = "schedule"; render(); if (scheduleSubTab === "week" && noticeList.length === 0) loadSoopNotice(); });
+  document.querySelector("#sideScheduleBtn").addEventListener("click", () => { activeTab = "schedule"; render(); if (noticeList.length === 0) loadSoopNotice(); });
   document.querySelector("#sideFanartBtn").addEventListener("click", () => { activeTab = "fanart"; render(); });
 
   const menuToggleBtn = document.querySelector("#menuToggleBtn");
@@ -656,27 +584,19 @@ function render() {
     });
 
     if (scheduleSubTab === "month") {
-      const prevMonthButton = document.querySelector("#prevMonthButton");
-      const nextMonthButton = document.querySelector("#nextMonthButton");
-      if (prevMonthButton) prevMonthButton.addEventListener("click", () => moveMonth(-1));
-      if (nextMonthButton) nextMonthButton.addEventListener("click", () => moveMonth(1));
+      document.querySelector("#prevMonthButton").addEventListener("click", () => moveMonth(-1));
+      document.querySelector("#nextMonthButton").addEventListener("click", () => moveMonth(1));
     } else {
-      const prevWeekButton = document.querySelector("#prevWeekButton");
-      const nextWeekButton = document.querySelector("#nextWeekButton");
-      const reloadNoticeButton = document.querySelector("#reloadNoticeButton");
-      if (prevWeekButton) prevWeekButton.addEventListener("click", () => moveWeek(-1));
-      if (nextWeekButton) nextWeekButton.addEventListener("click", () => moveWeek(1));
-      if (reloadNoticeButton) reloadNoticeButton.addEventListener("click", () => loadSoopNotice());
+      document.querySelector("#prevWeekButton").addEventListener("click", () => moveWeek(-1));
+      document.querySelector("#nextWeekButton").addEventListener("click", () => moveWeek(1));
+      document.querySelector("#reloadNoticeButton").addEventListener("click", () => loadSoopNotice());
 
-      // 💡 [신규 바인딩] 공지사항 카드를 클릭했을 때 펼쳐지거나 닫히는 토글 리스너 연동
+      // 아코디언 카드 클릭 토글 리스너 연동
       const cards = document.querySelectorAll(".notice-item-card");
       cards.forEach(card => {
         card.addEventListener("click", (e) => {
-          // 원본 보기 버튼 자체를 클릭했을 때는 아코디언이 접히지 않도록 버블링 방어
           if (e.target.classList.contains("notice-direct-btn")) return;
-
           const idx = parseInt(card.getAttribute("data-index"));
-          // 같은 걸 또 누르면 닫고, 다른 걸 누르면 해당 인덱스를 열어줌
           expandedNoticeIndex = (expandedNoticeIndex === idx) ? null : idx;
           render();
         });
