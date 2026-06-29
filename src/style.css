@@ -46,10 +46,6 @@ button {
   pointer-events: auto; 
 }
 
-.mobile-bar-brand {
-  display: none; 
-}
-
 .mobile-toggle-btn svg {
   width: 22px;
   height: 22px;
@@ -109,10 +105,18 @@ button {
   padding-left: 8px;
 }
 
+/* 💡 [해결 핵심] 사이드바 전용 미니 프로필 컨테이너 크기 및 가림 현상 정밀 제어 */
 .avatar-container.mini {
-  width: 44px;
-  height: 44px;
-  padding: 2px;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 2px !important;
+  border-radius: 50%;
+  overflow: hidden; /* 내부 요소가 흰 원형 밖으로 튀어나오는 것 원천 차단 */
+  background: #1a73e8;
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 .sidebar-logo-text {
@@ -157,15 +161,6 @@ button {
   box-shadow: 0 4px 14px rgba(26, 115, 232, 0.3);
 }
 
-.menu-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  width: 20px;
-  height: 20px;
-}
-
 .sidebar-footer {
   color: #4b4e61;
   font-size: 12px;
@@ -177,7 +172,7 @@ button {
   min-height: 100vh;
   background:
     linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4)), 
-    url("/src/assets/back.png") center top / cover no-repeat fixed;
+    url("https://images.unsplash.com/photo-1579546929518-9e396f3cc809") center top / cover no-repeat fixed;
   padding: 100px 40px 70px; 
   box-sizing: border-box;
   overflow-y: auto;
@@ -202,6 +197,7 @@ button {
   padding: 5px; 
   background: #1a73e8; 
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .avatar-container.live {
@@ -209,13 +205,15 @@ button {
   box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
+/* 💡 [해결 핵심] 프로필 이미지가 부모 서식 안에서 항상 동그랗고 꽉 차게 조율 */
 .avatar {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   border-radius: 50%;
   object-fit: cover;
   background-color: white;
   display: block;
+  box-sizing: border-box;
 }
 
 .profile-live-badge {
@@ -445,7 +443,7 @@ button {
   background: linear-gradient(135deg, #fff9db, #fff3bf);
   border-radius: 20px;
   padding: 20px;
- text-align: center;
+  text-align: center;
   border: 1px solid #ffe066;
 }
 
@@ -489,56 +487,6 @@ button {
   border: 1px solid #ececf4;
   box-shadow: 0 4px 10px rgba(0,0,0,0.01);
   text-align: left;
-}
-
-.rule-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.rule-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
-  color: white;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.rule-one { background: #1a73e8; }
-.rule-two { background: #3b82f6; }
-.rule-three { background: #60a5fa; }
-.rule-four { background: #a78bfa; }
-.rule-five { background: #dc43b5; }
-
-.rule-header h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  color: #2d2d38;
-}
-
-.rule-item p {
-  margin: 0;
-  font-size: 14px;
-  color: #555968;
-  line-height: 1.6;
-  font-weight: 600;
-}
-
-.ex-text {
-  display: inline-block;
-  margin-top: 4px;
-  color: #e03131;
-  background-color: #fff5f5;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-weight: 700;
 }
 
 .schedule-master-container {
